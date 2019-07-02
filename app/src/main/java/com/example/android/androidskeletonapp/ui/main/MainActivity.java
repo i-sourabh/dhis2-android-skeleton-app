@@ -15,6 +15,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 
+import org.hisp.dhis.android.core.program.Program;
 import org.hisp.dhis.android.core.user.User;
 
 import java.text.MessageFormat;
@@ -228,7 +229,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (id == R.id.navWipeData) {
             syncStatusText.setText(R.string.wiping_data);
             wipeData();
-        } else if (id == R.id.navExit) {
+        }
+        else if (id == R.id.program_list) {
+            ActivityStarter.startActivity(this, ProgramsActivity.class,true);
+            syncStatusText.setText(R.string.wiping_data);
+            wipeData();
+        }
+
+        else if (id == R.id.navExit) {
             compositeDisposable.add(logOut(this));
         }
 
