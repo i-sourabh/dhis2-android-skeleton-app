@@ -5,6 +5,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.android.androidskeletonapp.R;
+import com.example.android.androidskeletonapp.data.service.StyleBinderHelper;
 import com.example.android.androidskeletonapp.ui.base.DiffByIdItemCallback;
 import com.example.android.androidskeletonapp.ui.base.ListItemWithStyleHolder;
 
@@ -37,5 +38,8 @@ public class ProgramsAdapter extends PagedListAdapter<Program, ListItemWithStyle
         // TODO Set on click listener
         holder.title.setText(program.displayName());
         holder.subtitle1.setText(program.programStages().size() +" Stages");
+
+        StyleBinderHelper.bindStyle(holder,program.style());
+
     }
 }
