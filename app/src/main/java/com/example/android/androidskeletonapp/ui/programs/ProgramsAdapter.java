@@ -33,6 +33,9 @@ public class ProgramsAdapter extends PagedListAdapter<Program, ListItemWithStyle
     @Override
     public void onBindViewHolder(@NonNull ListItemWithStyleHolder holder, int position) {
         // TODO Bind view holder
+        Program program=getItem(position);
         // TODO Set on click listener
+        holder.title.setText(program.displayName());
+        holder.subtitle1.setText(program.programStages().size() +" Stages");
     }
 }
