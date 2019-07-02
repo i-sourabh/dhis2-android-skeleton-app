@@ -74,4 +74,8 @@
     <string name="date_button_text">Click to select date</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
+
+    <!--App Exc -->
+    <string name="d2_appname">test-sou</string>
+    <string name="d2_appversion">1.0</string>
 </resources>
