@@ -33,7 +33,7 @@ public class SplashActivity extends AppCompatActivity {
                 ).doOnError(throwable -> {
                     // TODO Toast error
                     Toast.makeText(this, "instantiateD2-Error", Toast.LENGTH_SHORT).show();
-                    Log.d("instantiateD2-Success","instantiateD2-Success");
+                    Log.d("instantiateD2-Error","instantiateD2-Error");
                 })
                 .subscribe();
     }
@@ -50,7 +50,7 @@ public class SplashActivity extends AppCompatActivity {
         // TODO Instantiate d2
         Single<D2> d2Single= D2Manager.setUp(Sdk.getD2Configuration(this)).andThen(D2Manager.setServerUrl("http://android2.dhis2.org:8080"))
                 .andThen(D2Manager.instantiateD2());
-        
+
 //        return Single.never();
           return d2Single;
     }
