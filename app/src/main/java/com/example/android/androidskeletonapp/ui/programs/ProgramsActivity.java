@@ -22,7 +22,7 @@ public class ProgramsActivity extends ListActivity implements OnProgramSelection
 
         ProgramsAdapter programsAdapter=new ProgramsAdapter(this);
         recyclerView.setAdapter(programsAdapter);
-        LiveData<PagedList<Program>> programs= Sdk.d2().programModule().programs.getPaged(20);
+        LiveData<PagedList<Program>> programs= Sdk.d2().programModule().programs.withStyle().getPaged(20);
         programs.observe(this,programPagesList ->{
             programsAdapter.submitList(programPagesList);
         });
