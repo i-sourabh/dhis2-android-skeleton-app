@@ -19,8 +19,10 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 
+import org.hisp.dhis.android.core.D2;
 import org.hisp.dhis.android.core.arch.call.D2Progress;
 import org.hisp.dhis.android.core.common.Unit;
+import org.hisp.dhis.android.core.d2manager.D2Manager;
 import org.hisp.dhis.android.core.user.User;
 
 import java.text.MessageFormat;
@@ -197,8 +199,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private Observable<D2Progress> syncMetadataObservable() {
+
         // TODO Sync user metadata
-        return Observable.never();
+        return D2Manager.getD2().syncMetaData();
+//        return Observable.never();
     }
 
     private void downloadData() {
@@ -214,9 +218,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private Observable<D2Progress> downloadDataObservable() {
         return Observable.merge(
                 // TODO Download trackedEntityInstances
+                D2Manager.getD2().trackedEntityModule().downloadTrackedEntityInstances(500,false,false),
+
                 Observable.never(),
 
                 // TODO Aggregated data values
+                D2Manager.getD2().aggregatedModule().data().download(),
                 Observable.never()
         );
     }
@@ -233,6 +240,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private Unit wipeDataCall() {
         // TODO Wipe data
+        wipeData();
         return new Unit();
     }
 
