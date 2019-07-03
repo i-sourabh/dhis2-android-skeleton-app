@@ -42,7 +42,7 @@ public class TrackedEntityInstancesActivity extends ListActivity {
         compositeDisposable = new CompositeDisposable();
 
         // TODO Uncomment this method to trigger trackedEntitySearch
-        // observeTrackedEntityInstances();
+         observeTrackedEntityInstances();
     }
 
     private void observeTrackedEntityInstances() {
