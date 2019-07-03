@@ -11,12 +11,16 @@ import com.example.android.androidskeletonapp.data.service.ActivityStarter;
 import com.example.android.androidskeletonapp.ui.base.ListActivity;
 import com.example.android.androidskeletonapp.ui.enrollment_form.EnrollmentFormActivity;
 
+import org.hisp.dhis.android.core.d2manager.D2Manager;
+import org.hisp.dhis.android.core.enrollment.EnrollmentCreateProjection;
 import org.hisp.dhis.android.core.maintenance.D2Error;
+import org.hisp.dhis.android.core.organisationunit.OrganisationUnit;
 import org.hisp.dhis.android.core.program.Program;
 import org.hisp.dhis.android.core.trackedentity.TrackedEntityInstanceCollectionRepository;
 import org.hisp.dhis.android.core.trackedentity.TrackedEntityInstanceCreateProjection;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import io.reactivex.disposables.CompositeDisposable;
@@ -54,8 +58,21 @@ public class TrackedEntityInstancesActivity extends ListActivity {
 
         findViewById(R.id.enrollmentButton).setOnClickListener(view -> {
             String teiUid = null;
-
             //TODO Create a new TEI and open the EnrollmentFormActivity if success
+            OrganisationUnit organisationUnit= D2Manager.getD2().organisationUnitModule()
+                    .organisationUnits.byOrganisationUnitScope(OrganisationUnit.Scope.SCOPE_DATA_CAPTURE)
+                    .one().get();
+            try {
+                 teiUid = D2Manager.getD2().trackedEntityModule().trackedEntityInstances.add(
+                        TrackedEntityInstanceCreateProjection.builder()
+                                .organisationUnit(organisationUnit.uid())
+                                .build()
+                );
+
+            } catch (D2Error d2Error) {
+                d2Error.printStackTrace();
+            }
+
         });
     }
 
