@@ -28,7 +28,6 @@ public class SyncStatusHelper {
     }
 
     public static boolean isThereDataToUpload() {
-        // TODO Logic to know if there is data to upload
         return D2Manager.getD2().trackedEntityModule().trackedEntityInstances
                 .byState().eq(State.TO_POST)
                 .get().size() > 0 || D2Manager.getD2().trackedEntityModule().trackedEntityInstances
