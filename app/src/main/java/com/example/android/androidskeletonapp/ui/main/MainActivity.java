@@ -39,6 +39,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private FloatingActionButton syncMetadataButton;
     private FloatingActionButton syncDataButton;
+    private FloatingActionButton uploadDataButton;
     // TODO - private FloatingActionButton uploadDataButton;
 
     private TextView syncStatusText;
@@ -93,6 +94,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         syncMetadataButton = findViewById(R.id.syncMetadataButton);
         syncDataButton = findViewById(R.id.syncDataButton);
         // TODO bind uploadDataButton to "uploadDataButton" view
+        uploadDataButton = findViewById(R.id.uploadDataButton);
 
         syncStatusText = findViewById(R.id.notificator);
         progressBar = findViewById(R.id.syncProgressBar);
@@ -115,6 +117,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         // TODO Listen to uploadDataButton and execute these actions:
 
+        uploadDataButton.setOnClickListener(view -> {
+            Observable.fromCallable(() -> Sdk.d2().trackedEntityModule().trackedEntityInstances.upload())
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .doOnError(Throwable::printStackTrace)
+                    .doOnComplete(this::setSyncingFinished)
+                    .subscribe();
+        });
             // TODO Set syncing
             // TODO Show a snackbar to notify about the action
 

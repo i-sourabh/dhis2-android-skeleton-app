@@ -3,6 +3,7 @@ package com.example.android.androidskeletonapp.data.service;
 import com.example.android.androidskeletonapp.data.Sdk;
 
 import org.hisp.dhis.android.core.common.State;
+import org.hisp.dhis.android.core.d2manager.D2Manager;
 
 public class SyncStatusHelper {
 
@@ -28,6 +29,14 @@ public class SyncStatusHelper {
 
     public static boolean isThereDataToUpload() {
         // TODO Logic to know if there is data to upload
-        return true;
+        return D2Manager.getD2().trackedEntityModule().trackedEntityInstances
+                .byState().eq(State.TO_POST)
+                .get().size() > 0 || D2Manager.getD2().trackedEntityModule().trackedEntityInstances
+                .byState().eq(State.TO_UPDATE)
+                .get().size() > 0 || D2Manager.getD2().trackedEntityModule().trackedEntityInstances
+                .byState().eq(State.TO_DELETE)
+                .get().size() > 0;
+
     }
+
 }
