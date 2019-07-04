@@ -22,8 +22,12 @@ import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 
 import org.hisp.dhis.android.core.user.User;
+import org.hisp.dhis.android.core.user.UserModule;
+import org.hisp.dhis.android.core.user.UserTableInfo;
 
 import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.List;
 
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
@@ -35,7 +39,7 @@ import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
-
+import android.database.Cursor;
 import static com.example.android.androidskeletonapp.data.service.LogOutService.logOut;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -60,6 +64,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         // TODO get user from cursor
         User user = getUser();
+
         TextView greeting = findViewById(R.id.greeting);
         greeting.setText(String.format("Hi %s!", user.displayName()));
 
@@ -74,7 +79,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private User getUser() {
-        return Sdk.d2().userModule().user.getWithoutChildren();
+        User user=null;
+        String query = "SELECT * FROM " + UserTableInfo.TABLE_INFO.name();
+        try (Cursor cursor = Sdk.d2().databaseAdapter().query(query)) {
+            List<User> users=new ArrayList<>();
+            if (cursor.getCount() > 0) {
+                cursor.moveToFirst();
+                user=User.create(cursor);
+            }
+
+        }
+        return user;
     }
 
     @Override
