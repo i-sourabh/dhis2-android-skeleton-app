@@ -57,8 +57,9 @@ public class LoginViewModel extends ViewModel {
             title = "Login",
             tips = "Call login method in user module"
     )
+    //ToDO perform login using d2.usermodule
     private Single<User> performLogin(String username, String password, String serverUrl) {
-        return Single.never();
+        return Sdk.d2().userModule().logIn(username,password,serverUrl);
     }
 
     void loginDataChanged(String serverUrl, String username, String password) {

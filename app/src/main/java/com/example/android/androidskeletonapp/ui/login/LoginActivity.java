@@ -140,8 +140,9 @@ public class LoginActivity extends AppCompatActivity {
             title = "Login",
             tips = "Show a toast to welcome the user"
     )
+    //ToDO 10-12-2019 show user info as a Toast
     private void showUserInfo(User user) {
-
+    Toast.makeText(getApplicationContext(),"Hello there" + user.name(),Toast.LENGTH_LONG).show();
     }
 
     @Override
