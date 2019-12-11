@@ -14,7 +14,9 @@ import com.example.android.androidskeletonapp.data.Sdk;
 import com.example.android.androidskeletonapp.data.utils.Exercise;
 import com.example.android.androidskeletonapp.ui.base.ListActivity;
 
+import org.hisp.dhis.android.core.arch.repositories.scope.RepositoryScope;
 import org.hisp.dhis.android.core.dataset.DataSet;
+import org.hisp.dhis.android.core.period.PeriodType;
 
 public class DataSetsActivity extends ListActivity {
 
@@ -48,6 +50,7 @@ public class DataSetsActivity extends ListActivity {
             solutionBranch = "sol02"
     )
     private LiveData<PagedList<DataSet>> getDataSetLiveData() {
-        return Sdk.d2().dataSetModule().dataSets().getPaged(20);
+        return Sdk.d2().dataSetModule().dataSets().byPeriodType().eq(PeriodType.BiWeekly).
+                orderByDisplayName(RepositoryScope.OrderByDirection.ASC).getPaged(20);
     }
 }
