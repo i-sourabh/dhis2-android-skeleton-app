@@ -84,10 +84,12 @@ public class ProgramsActivity extends ListActivity implements OnProgramSelection
     private LiveData<PagedList<Program>> getProgramsWithOrgUnits(List<OrganisationUnit> organisationUnits) {
 
 
-        return Sdk.d2().programModule().programs().byOrganisationUnitList(UidsHelper.getUidsList(organisationUnits))
+        return Sdk.d2().programModule().programs()
+                .byOrganisationUnitList(UidsHelper.getUidsList(organisationUnits))
                 .byRegistration().isTrue()
-                .byFeatureType().eq(FeatureType.POLYGON)
-                .orderByName(RepositoryScope.OrderByDirection.ASC).getPaged(20);
+                .byDisplayName().like("ria")
+                .orderByName(RepositoryScope.OrderByDirection.ASC)
+                .getPaged(20);
     }
 
     @Override
