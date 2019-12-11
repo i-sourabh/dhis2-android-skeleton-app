@@ -20,6 +20,7 @@ import org.hisp.dhis.android.core.organisationunit.OrganisationUnit;
 import org.hisp.dhis.android.core.program.Program;
 import org.hisp.dhis.android.core.program.ProgramTrackedEntityAttribute;
 import org.hisp.dhis.android.core.trackedentity.TrackedEntityAttribute;
+import org.hisp.dhis.android.core.trackedentity.TrackedEntityInstance;
 import org.hisp.dhis.android.core.trackedentity.TrackedEntityInstanceCreateProjection;
 
 import java.util.List;
@@ -119,6 +120,31 @@ public class CodeExecutorActivity extends AppCompatActivity {
     private Single<String> executeCode() {
         return Single.defer(() -> {
             // TODO Create the tracked entity instance here.
+            OrganisationUnit organisationUnit=Sdk.d2().organisationUnitModule().organisationUnits().one().blockingGet();
+
+            String trackedEntityInstance_uid=Sdk.d2().trackedEntityModule().trackedEntityInstances()
+                    .blockingAdd(TrackedEntityInstanceCreateProjection.builder()
+                            .organisationUnit(organisationUnit.uid())
+                            .trackedEntityType(MALARIA_CASE_TET_UID)
+                            .build()
+                    );
+            Program program=Sdk.d2().programModule().programs()
+                            .byTrackedEntityTypeUid().eq(MALARIA_CASE_TET_UID).one().blockingGet();
+
+            List<ProgramTrackedEntityAttribute> programTrackedEntityAttributeList=Sdk.d2().programModule()
+                    .programTrackedEntityAttributes().byProgram().eq(program.uid()).blockingGet();
+
+            for(ProgramTrackedEntityAttribute programTrackedEntityAttribute:programTrackedEntityAttributeList)
+            {
+                TrackedEntityAttribute value=Sdk.d2().trackedEntityModule().trackedEntityAttributes()
+                        .uid(programTrackedEntityAttribute.trackedEntityAttribute().uid())
+                        .blockingGet();
+
+                Sdk.d2().trackedEntityModule().trackedEntityAttributeValues()
+                        .value(value.uid(),trackedEntityInstance_uid)
+                        .blockingSet(value.displayName());
+            }
+
 
             return Single.just("Tracked entity instance created!");
         });
