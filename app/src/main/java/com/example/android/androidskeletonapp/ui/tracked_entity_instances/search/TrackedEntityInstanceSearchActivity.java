@@ -91,6 +91,21 @@ public class TrackedEntityInstanceSearchActivity extends ListActivity {
                     "- Online first method"
     )
     private LiveData<PagedList<TrackedEntityInstance>> getTrackedEntityInstanceQuery() {
-        return null;
+
+        List<OrganisationUnit> organisationUnits=Sdk.d2().organisationUnitModule().organisationUnits()
+                .byOrganisationUnitScope(OrganisationUnit.Scope.SCOPE_TEI_SEARCH).blockingGet();
+
+        Program program=Sdk.d2().programModule().programs().byDisplayName().like("malaria").one().blockingGet();
+
+        return Sdk.d2().trackedEntityModule().trackedEntityInstanceQuery()
+                .byOrgUnits().in(UidsHelper.getUidsList(organisationUnits))
+                .byOrgUnitMode().eq(OrganisationUnitMode.DESCENDANTS)
+                .byProgram().eq(program.uid())
+                .byAttribute(Sdk.d2().trackedEntityModule().trackedEntityAttributes()
+                        .byDisplayName().like("last").one().blockingGet().uid())
+                .like("waldo")
+                .offlineFirst()
+                .getPaged(20);
+
     }
 }
