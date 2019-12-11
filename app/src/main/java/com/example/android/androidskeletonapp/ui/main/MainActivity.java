@@ -235,7 +235,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     setSyncingFinished();
                     ActivityStarter.startActivity(this, ProgramsActivity.getProgramActivityIntent(this), false);
                 })
-                .subscribe());
+                .subscribe(
+                        d2Progress -> {
+
+                        },
+                        throwable -> {
+                            throwable.printStackTrace();
+                        }
+                ));
     }
 
     private Observable<D2Progress> downloadMetadata() {
@@ -289,7 +296,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             tips = "Call upload method in dataValues."
     )
     private Observable<D2Progress> uploadAggregatedData() {
-        return Observable.empty();
+        return Sdk.d2().dataValueModule().dataValues().upload();
     }
 
     private void wipeData() {
