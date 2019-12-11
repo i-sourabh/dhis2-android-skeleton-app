@@ -19,6 +19,7 @@ import com.example.android.androidskeletonapp.ui.tracked_entity_instances.Tracke
 
 import org.hisp.dhis.android.core.arch.helpers.UidsHelper;
 import org.hisp.dhis.android.core.arch.repositories.scope.RepositoryScope;
+import org.hisp.dhis.android.core.common.FeatureType;
 import org.hisp.dhis.android.core.organisationunit.OrganisationUnit;
 import org.hisp.dhis.android.core.program.Program;
 import org.hisp.dhis.android.core.program.ProgramType;
@@ -68,7 +69,7 @@ public class ProgramsActivity extends ListActivity implements OnProgramSelection
             solutionBranch = "sol07"
     )
     private Single<List<OrganisationUnit>> getUserOrganisationUnits() {
-        return Single.just(new ArrayList<>());
+        return Single.just(Sdk.d2().organisationUnitModule().organisationUnits().blockingGet());
     }
 
     @Exercise(
@@ -81,7 +82,12 @@ public class ProgramsActivity extends ListActivity implements OnProgramSelection
             solutionBranch = "sol07"
     )
     private LiveData<PagedList<Program>> getProgramsWithOrgUnits(List<OrganisationUnit> organisationUnits) {
-        return new MutableLiveData<>();
+
+
+        return Sdk.d2().programModule().programs().byOrganisationUnitList(UidsHelper.getUidsList(organisationUnits))
+                .byRegistration().isTrue()
+                .byFeatureType().eq(FeatureType.POLYGON)
+                .orderByName(RepositoryScope.OrderByDirection.ASC).getPaged(20);
     }
 
     @Override
