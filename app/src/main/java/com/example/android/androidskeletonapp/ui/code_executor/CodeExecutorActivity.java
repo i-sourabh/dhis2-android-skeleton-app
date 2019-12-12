@@ -15,6 +15,11 @@ import com.example.android.androidskeletonapp.data.utils.Exercise;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
+import org.hisp.dhis.android.core.arch.helpers.GeometryHelper;
+import org.hisp.dhis.android.core.common.FeatureType;
+import org.hisp.dhis.android.core.common.Geometry;
+import org.hisp.dhis.android.core.maintenance.D2Error;
+
 import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
@@ -105,7 +110,16 @@ public class CodeExecutorActivity extends AppCompatActivity {
     private Single<String> executeCode() {
         return Single.defer(() -> {
             // TODO Catch and print a D2Error.
-            
+            try {
+                Geometry geometry=Geometry.builder()
+                                  .coordinates("[s2,5.0]")
+                                   .type(FeatureType.POLYGON)
+                                    .build();
+                GeometryHelper.getPolygon(geometry);
+            }catch (D2Error d2Error)
+            {
+                return Single.just(d2Error.errorDescription());
+            }
             return Single.just("Execution done!");
         });
     }
