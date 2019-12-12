@@ -11,9 +11,21 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import com.example.android.androidskeletonapp.R;
+import com.example.android.androidskeletonapp.data.Sdk;
 import com.example.android.androidskeletonapp.data.utils.Exercise;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.common.collect.Lists;
+
+import org.hisp.dhis.android.core.category.CategoryOptionCombo;
+import org.hisp.dhis.android.core.dataelement.DataElement;
+import org.hisp.dhis.android.core.dataset.DataSet;
+import org.hisp.dhis.android.core.dataset.DataSetElement;
+import org.hisp.dhis.android.core.datavalue.DataValueObjectRepository;
+import org.hisp.dhis.android.core.organisationunit.OrganisationUnit;
+import org.hisp.dhis.android.core.period.Period;
+
+import java.util.List;
 
 import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -106,6 +118,45 @@ public class CodeExecutorActivity extends AppCompatActivity {
     private Single<String> executeCode() {
         return Single.defer(() -> {
             // TODO resolve the exercise here.
+
+            DataSet dataSet= Sdk.d2().dataSetModule().dataSets().withDataSetElements().one().blockingGet();
+
+            Period period_this=Sdk.d2().periodModule().periodHelper().blockingGetPeriodsForDataSet(dataSet.uid()).get(0);
+
+            OrganisationUnit organisationUnit=Sdk.d2().organisationUnitModule().organisationUnits().byDataSetUids(Lists.newArrayList(dataSet.uid())).one().blockingGet();
+
+            List<CategoryOptionCombo> attributeOptionCombos = Sdk.d2().categoryModule().categoryOptionCombos()
+                    .byCategoryComboUid().eq(dataSet.categoryCombo().uid())
+                    .blockingGet();
+
+            for (DataSetElement dataSetElement: dataSet.dataSetElements())
+            {
+                DataElement dataElement = Sdk.d2().dataElementModule().dataElements()
+                        .uid(dataSetElement.dataElement().uid())
+                        .blockingGet();
+                List<CategoryOptionCombo> categoryOptionCombos = Sdk.d2().categoryModule().categoryOptionCombos()
+                        .byCategoryComboUid().eq(dataElement.categoryCombo().uid())
+                        .blockingGet();
+                for (CategoryOptionCombo coc : categoryOptionCombos) {
+                    for (CategoryOptionCombo aoc : attributeOptionCombos) {
+                        DataValueObjectRepository repository = Sdk.d2().dataValueModule().dataValues()
+                                .value(
+                                        period_this.periodId(),
+                                        organisationUnit.uid(),
+                                        dataSetElement.dataElement().uid(),
+                                        dataSetElement.categoryCombo() != null ?
+                                                dataSetElement.categoryCombo().uid() :
+                                                coc.uid(),
+                                        aoc.uid());
+                        repository.blockingSet("124");
+                    }
+                }
+
+            }
+
+
+            CategoryOptionCombo categoryOptionCombo=Sdk.d2().categoryModule().categoryOptionCombos().byCategoryComboUid()
+            return Single.just("Execution done!");
 
             return Single.just("Execution done!");
         });
