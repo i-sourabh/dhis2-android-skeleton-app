@@ -116,7 +116,8 @@ public class TrackedEntityInstanceAdapter extends PagedListAdapter<TrackedEntity
             solutionBranch = "sol10b"
     )
     private Observable<D2Progress> syncTei(String teiUid) {
-        return Observable.empty();
+        return Sdk.d2().trackedEntityModule().trackedEntityInstances()
+                .byUid().eq(teiUid).upload();
     }
 
     private String valueAt(List<TrackedEntityAttributeValue> values, String attributeUid) {
