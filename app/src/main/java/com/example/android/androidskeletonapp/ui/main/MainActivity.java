@@ -90,7 +90,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             solutionBranch = "sol12"
     )
     private User getUser() {
-        return null;
+        User test_user=null;
+        Cursor cursor=Sdk.d2().databaseAdapter().query("SELECT * FROM User");
+        if (cursor!=null&&cursor.moveToFirst())
+        {
+            test_user=User.create(cursor);
+            cursor.close();
+        }
+    return test_user;
     }
 
     @Override
