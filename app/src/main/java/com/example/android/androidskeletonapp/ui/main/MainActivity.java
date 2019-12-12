@@ -292,7 +292,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             solutionBranch = "sol10a"
     )
     private Observable<D2Progress> getDataToUpload(){
-        return Observable.empty();
+//                        if (Sdk.d2().fileResourceModule().fileResources()!=null)
+               return   Sdk.d2().fileResourceModule().fileResources().upload()
+                       .concatWith(Sdk.d2().trackedEntityModule().trackedEntityInstances().upload())
+                       .concatWith(Sdk.d2().dataValueModule().dataValues().upload())
+                       .concatWith(Sdk.d2().eventModule().events().upload());
     }
 
     private void wipeData() {
