@@ -10,10 +10,12 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.paging.PagedList;
 
 import com.example.android.androidskeletonapp.R;
+import com.example.android.androidskeletonapp.data.Sdk;
 import com.example.android.androidskeletonapp.data.utils.Exercise;
 import com.example.android.androidskeletonapp.ui.base.ListActivity;
 
 import org.hisp.dhis.android.core.maintenance.D2Error;
+import org.hisp.dhis.android.core.maintenance.D2ErrorCode;
 
 public class D2ErrorActivity extends ListActivity {
 
@@ -52,6 +54,8 @@ public class D2ErrorActivity extends ListActivity {
             solutionBranch = "sol11a"
     )
     private LiveData<PagedList<D2Error>> d2ErrorsLiveData() {
-        return new MutableLiveData<>();
+
+        return Sdk.d2().maintenanceModule().d2Errors().byD2ErrorCode().eq(D2ErrorCode.API_RESPONSE_PROCESS_ERROR)
+                .getPaged(20);
     }
 }
