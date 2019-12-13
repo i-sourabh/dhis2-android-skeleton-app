@@ -11,9 +11,16 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import com.example.android.androidskeletonapp.R;
+import com.example.android.androidskeletonapp.data.Sdk;
 import com.example.android.androidskeletonapp.data.utils.Exercise;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
+
+import org.hisp.dhis.android.core.category.CategoryOptionCombo;
+import org.hisp.dhis.android.core.dataset.DataSet;
+import org.hisp.dhis.android.core.dataset.DataSetCompleteRegistrationObjectRepository;
+import org.hisp.dhis.android.core.organisationunit.OrganisationUnit;
+import org.hisp.dhis.android.core.period.Period;
 
 import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -106,6 +113,30 @@ public class CodeExecutorActivity extends AppCompatActivity {
     private Single<String> executeCode() {
         return Single.defer(() -> {
             // TODO resolve the exercise here.
+
+            DataSet dataSet = Sdk.d2().dataSetModule().dataSets()
+                    .withDataSetElements()
+                    .one()
+                    .blockingGet();
+            Period period = Sdk.d2().periodModule().periods()
+                    .byPeriodType().eq(dataSet.periodType())
+                    .one()
+                    .blockingGet();
+            CategoryOptionCombo attributeOptionCombo = Sdk.d2().categoryModule().categoryOptionCombos()
+                    .byCategoryComboUid().eq(dataSet.categoryCombo().uid())
+                    .one()
+                    .blockingGet();
+            OrganisationUnit organisationUnit = Sdk.d2().organisationUnitModule().organisationUnits()
+                    .one()
+                    .blockingGet();
+            DataSetCompleteRegistrationObjectRepository repository = Sdk.d2().dataSetModule()
+                    .dataSetCompleteRegistrations()
+                    .value(
+                            period.periodId(),
+                            organisationUnit.uid(),
+                            dataSet.uid(),
+                            attributeOptionCombo.uid());
+            repository.blockingSet();
 
             return Single.just("Exist: " );
         });
