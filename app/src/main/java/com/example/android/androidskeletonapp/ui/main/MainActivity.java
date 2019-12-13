@@ -249,7 +249,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             tips = "Call the download method for metadata."
     )
     private Observable<D2Progress> downloadMetadata() {
-        return Observable.empty();
+        return Sdk.d2().metadataModule().download();
     }
 
     @Exercise(
@@ -259,7 +259,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     "'syncStatusText' variable print the progress, show a toast or anything you want."
     )
     private void notifyMetadataProgress(D2Progress d2Progress) {
-
+//        syncStatusText.setText("Progress",d2Progress.percentage());
     }
 
     private void downloadData() {
